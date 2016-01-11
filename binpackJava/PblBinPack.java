@@ -34,9 +34,6 @@ public PblBinPack(String fileName){
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			lignes.add(line);
-
-			System.out.println(line);
-
 		}
 
 		scanner.close();

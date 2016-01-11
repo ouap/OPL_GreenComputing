@@ -22,8 +22,14 @@ int sum(enumeration* e){
 void checkSize(bags *bag, int currSize){
 	if (bag->currBag > bag->length)
 	{
-		bag->sacs = realloc(bag->sacs, sizeof(int) * (currSize + 500));
-		bag->length += 500;
+		printf("dezfzefezfezf\n");
+		int* tmp = realloc(bag->sacs, (currSize + 100) * sizeof(int));
+		if (tmp != NULL)
+		{
+			bag->sacs = tmp;
+			bag->length += 100;	
+		}
+
 	}
 }
 
@@ -81,7 +87,7 @@ void addFirstFit(int obj, bags *first){
 		*(first->sacs + first->currBag * sizeof(int)) = tmp;
 	}
 
-	
+
 
 
 }
@@ -144,8 +150,8 @@ void nextPartialSolution(enumeration * e, bags *first, bags *next, bags *best){
 		int obj = nextElement(e);
 
 		addFirstFit(obj, first);
-		addNextFit(obj, next);
-		addBestFit(obj, best);
+		//addNextFit(obj, next);
+		//addBestFit(obj, best);
 	}else{
 		printf("Plus d'objet. \n");
 	}
@@ -187,7 +193,7 @@ int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 }
 
 
-
+ 
 void init(bags* first, bags* next, bags* best, int capacite){
 	first->sacs = calloc(NBSAC, sizeof(int));
 	first->length = NBSAC;
@@ -205,8 +211,11 @@ void init(bags* first, bags* next, bags* best, int capacite){
 
 void free_bags(bags *first, bags *next, bags *best){
 	free(first->sacs);
-		free(next->sacs);
+	free(next->sacs);
 	free(best->sacs);
+	first->sacs = NULL;
+	next->sacs = NULL;
+	best->sacs = NULL;
 
 }
 
@@ -242,7 +251,7 @@ int main(int argc, char **argv){
 		nextPartialSolution(&enu, &first, &next, &best);
 	}
 
-	free_bags(&first, &next, &best);
+	//free_bags(&first, &next, &best);
 
 	display(first, next, best);
 	return 0;

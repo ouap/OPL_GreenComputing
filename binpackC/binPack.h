@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define TAILLE 1000
-#define NBSAC 100
+#define TAILLE 50000
+#define NBSAC 500
+
+
 typedef struct{
 	int obj[TAILLE];
 	int iterator;
