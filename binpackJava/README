@@ -1,0 +1,22 @@
+Ouamar Sais
+Heuristique 
+
+BinPack et Partition sont compris dans le même fichier SolutionWalkerBinPackXX.java
+
+—————
+Compilation
+
+javac *.java
+
+—————
+Lancement 
+
+java SolutionWalkerBinPackXX fichier.BPP  [-option]  /*-on -off (Par default -on)*/
+
+
+La méthode First est plus rapide que Best car il y a moins de temps de recherche, mais la méthode Best donne un résultat plus proche de l'optimale, voir l’optimale.
+
+
+
+
+
