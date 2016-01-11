@@ -32,9 +32,9 @@ public class PartialSolutionBinPack implements PartialSolution {
 	@Override
 	public void Display() {
 		System.out.println("BinPack :");
-		System.out.println(" Next(H1)  : " + next.size() + " sacs"
-				+ "\n First(H2) : " + first.size() + " sacs"
-				+ "\n Best(H3)  : " + best.size() + " sacs");
+		System.out.println(" First  : " + first.size() + " sacs"
+				+ "\n Next : " + next.size() + " sacs"
+				+ "\n Best  : " + best.size() + " sacs");
 	}
 
 	/* FONCTION POUR BINPACK */

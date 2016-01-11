@@ -12,22 +12,21 @@ int nextElement(enumeration* e){
 
 int sum(enumeration* e){
 	int sum = 0;
-	for (int i = 0; i < e->length; ++i)
+	for (int i = 0; i < e->length; i++)
 	{
 		sum += e->obj[i];
 	}
 	return sum;
 }
 
-void checkSize(bags *bag, int currSize){
+void checkSize(bags *bag){
 	if (bag->currBag > bag->length)
 	{
-		printf("dezfzefezfezf\n");
-		int* tmp = realloc(bag->sacs, (currSize + 100) * sizeof(int));
+		int* tmp = realloc(bag->sacs,  sizeof(int) * (bag->currBag + 500));
 		if (tmp != NULL)
 		{
 			bag->sacs = tmp;
-			bag->length += 100;	
+			bag->length += 500;	
 		}
 
 	}
@@ -40,14 +39,17 @@ void addNextFit(int obj, bags *next){
 	}
 
 
-	if (*(next->sacs + next->currBag * sizeof(int)) + obj > next->capacite)
+	if (next->sacs[next->currBag] + obj > next->capacite)
 	{
 		next->currBag++;
-		checkSize(next, next->currBag);
+		checkSize(next);
+		next->sacs[next->currBag] = obj;
+	}else{
+		int tmp = next->sacs[next->currBag] + obj;
+		next->sacs[next->currBag] = tmp;
 	}
 
-	int tmp = *(next->sacs + next->currBag * sizeof(int)) + obj;
-	*(next->sacs + next->currBag * sizeof(int)) = tmp;
+	
 }
 
 void addFirstFit(int obj, bags *first){
@@ -60,11 +62,11 @@ void addFirstFit(int obj, bags *first){
 	}
 
 
-	if (*(first->sacs + first->currBag * sizeof(int)) + obj > first->capacite)
+	if (first->sacs[first->currBag] + obj > first->capacite)
 	{
-		for (int i = 0; i < first->currBag; ++i)
+		for (int i = 0; i < first->currBag; i++)
 		{
-			if (*(first->sacs + i * sizeof(int)) + obj <= first->capacite && !done)
+			if (first->sacs[i] + obj <= first->capacite && !done)
 			{
 				done = true;
 				bag=i;
@@ -74,17 +76,17 @@ void addFirstFit(int obj, bags *first){
 		if (!done)
 		{
 			first->currBag++;
-			checkSize(first, first->currBag);
-			*(first->sacs + first->currBag * sizeof(int)) = obj;
+			checkSize(first);
+			first->sacs[first->currBag] = obj;
 		}else{
-			int tmp = *(first->sacs + bag * sizeof(int)) + obj;
-			*(first->sacs + bag * sizeof(int)) = tmp;
+			int tmp = first->sacs[bag] + obj;
+			first->sacs[bag] = tmp;
 		}
 
 
 	}else{
-		int tmp = *(first->sacs + first->currBag * sizeof(int)) + obj;
-		*(first->sacs + first->currBag * sizeof(int)) = tmp;
+		int tmp = first->sacs[first->currBag] + obj;
+		first->sacs[first->currBag] = tmp;
 	}
 
 
@@ -102,22 +104,22 @@ void addBestFit(int obj, bags *best){
 		best->currBag = 0;
 	}
 
-	if (*(best->sacs + best->currBag * sizeof(int)) + obj > best->capacite)
+	if (best->sacs[best->currBag] + obj > best->capacite)
 	{
-		for (int i = 0; i < best->currBag; ++i)
+		for (int i = 0; i < best->currBag + 1 ; i++)
 		{
-			if (*(best->sacs + i* sizeof(int)) + obj <= best->capacite)
+			if (best->sacs[i] + obj <= best->capacite)
 			{
 				if (gap == -1)
 				{
 					done = true;
-					gap = best->capacite - (*(best->sacs + i * sizeof(int)) + obj);
+					gap = best->capacite - (best->sacs[i] + obj);
 					bag = i;
 				}
 
-				if (gap > best->capacite - (*(best->sacs + i * sizeof(int)) + obj))
+				if (gap > best->capacite - (best->sacs[i] + obj))
 				{
-					gap = best->capacite - (*(best->sacs + i * sizeof(int)) + obj);
+					gap = best->capacite - (best->sacs[i] + obj);
 					bag = i;
 				}
 			}
@@ -126,17 +128,17 @@ void addBestFit(int obj, bags *best){
 		if (!done)
 		{
 			best->currBag++;
-			checkSize(best, best->currBag);
-
+			checkSize(best);
+			best->sacs[best->currBag] = obj;
 		}else{
-			/*TODO Modifier pour garder currbag a nb de sac utilisé actuellement*/
-			best->currBag = bag;
+			int tmp = best->sacs[bag] + obj;
+			best->sacs[bag] = tmp;
 		}
+
+	}else{
+		int tmp = best->sacs[best->currBag] + obj;
+		best->sacs[best->currBag] = tmp;
 	}
-
-	int tmp = *(best->sacs + best->currBag * sizeof(int)) + obj;
-	*(best->sacs + best->currBag * sizeof(int)) = tmp;
-
 
 }
 
@@ -150,8 +152,8 @@ void nextPartialSolution(enumeration * e, bags *first, bags *next, bags *best){
 		int obj = nextElement(e);
 
 		addFirstFit(obj, first);
-		//addNextFit(obj, next);
-		//addBestFit(obj, best);
+		addNextFit(obj, next);
+		addBestFit(obj, best);
 	}else{
 		printf("Plus d'objet. \n");
 	}
@@ -177,7 +179,7 @@ int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 	*nbObj =  atoi(fgets (buf, sizeof(buf), fp));
 	*capacite = atoi(fgets (buf, sizeof(buf), fp));
 
-	for (int i = 0; i < *nbObj; ++i)
+	for (int i = 0; i < *nbObj; i++)
 	{
 		fgets (buf, sizeof(buf), fp);
 		enu->obj[i] = atoi(buf);
@@ -221,9 +223,9 @@ void free_bags(bags *first, bags *next, bags *best){
 
 void display(bags first, bags next, bags best){
 	printf("BinPack : \n");
-	printf("	First : %d\n", first.currBag);
-	printf("	Next : %d\n", next.currBag);
-	printf("	Best : %d\n", best.currBag);
+	printf("	First : %d\n", first.currBag +1);
+	printf("	Next : %d\n", next.currBag + 1);
+	printf("	Best : %d\n", best.currBag + 1);
 }
 
 
@@ -251,8 +253,9 @@ int main(int argc, char **argv){
 		nextPartialSolution(&enu, &first, &next, &best);
 	}
 
-	//free_bags(&first, &next, &best);
-
 	display(first, next, best);
+
+	free_bags(&first, &next, &best);
+
 	return 0;
 }
