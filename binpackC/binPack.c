@@ -20,7 +20,11 @@ int sum(enumeration* e){
 }
 
 void checkSize(bags *bag, int currSize){
-
+	if (bag->currBag > bag->length)
+	{
+		bag->sacs = realloc(bag->sacs, sizeof(int) * (currSize + 500));
+		bag->length += 500;
+	}
 }
 
 void addNextFit(int obj, bags *next){
@@ -186,17 +190,24 @@ int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 
 void init(bags* first, bags* next, bags* best, int capacite){
 	first->sacs = calloc(NBSAC, sizeof(int));
-	first->length = 1000;
+	first->length = NBSAC;
 	first->currBag = -1;
 	first->capacite = capacite;
 	next->sacs = calloc(NBSAC, sizeof(int));
-	next->length = 1000;
+	next->length = NBSAC;
 	next->currBag = -1;
 	next->capacite = capacite;
 	best->sacs = calloc(NBSAC, sizeof(int));
-	best->length = 1000;
+	best->length = NBSAC;
 	best->currBag = -1;
 	best->capacite = capacite;
+}
+
+void free_bags(bags *first, bags *next, bags *best){
+	free(first->sacs);
+		free(next->sacs);
+	free(best->sacs);
+
 }
 
 void display(bags first, bags next, bags best){
@@ -229,8 +240,9 @@ int main(int argc, char **argv){
 	//Processing binPack
 	while(!Terminated(&enu)){
 		nextPartialSolution(&enu, &first, &next, &best);
-	}	
+	}
 
+	free_bags(&first, &next, &best);
 
 	display(first, next, best);
 	return 0;
