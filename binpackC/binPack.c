@@ -90,8 +90,6 @@ void addFirstFit(int obj, bags *first){
 	}
 
 
-
-
 }
 
 void addBestFit(int obj, bags *best){
@@ -104,50 +102,46 @@ void addBestFit(int obj, bags *best){
 		best->currBag = 0;
 	}
 
-	if (best->sacs[best->currBag] + obj > best->capacite)
+	
+	for (int i = 0; i < best->currBag + 1 ; i++)
 	{
-		for (int i = 0; i < best->currBag + 1 ; i++)
+		if (best->sacs[i] + obj <= best->capacite)
 		{
-			if (best->sacs[i] + obj <= best->capacite)
+			if (gap == -1)
 			{
-				if (gap == -1)
-				{
-					done = true;
-					gap = best->capacite - (best->sacs[i] + obj);
-					bag = i;
-				}
+				done = true;
+				gap = best->capacite - (best->sacs[i] + obj);
+				bag = i;
+			}
 
-				if (gap > best->capacite - (best->sacs[i] + obj))
-				{
-					gap = best->capacite - (best->sacs[i] + obj);
-					bag = i;
-				}
+			if (gap > best->capacite - (best->sacs[i] + obj))
+			{
+				gap = best->capacite - (best->sacs[i] + obj);
+				bag = i;
 			}
 		}
-
-		if (!done)
-		{
-			best->currBag++;
-			checkSize(best);
-			best->sacs[best->currBag] = obj;
-		}else{
-			int tmp = best->sacs[bag] + obj;
-			best->sacs[bag] = tmp;
-		}
-
-	}else{
-		int tmp = best->sacs[best->currBag] + obj;
-		best->sacs[best->currBag] = tmp;
 	}
+
+	if (!done)
+	{
+		best->currBag++;
+		checkSize(best);
+		best->sacs[best->currBag] = obj;
+	}else{
+		int tmp = best->sacs[bag] + obj;
+		best->sacs[bag] = tmp;
+	}
+
+	
 
 }
 
-bool Terminated(enumeration *e){
+bool terminated(enumeration *e){
 	return (!hasMoreElement(e)) ;
 }
 
 void nextPartialSolution(enumeration * e, bags *first, bags *next, bags *best){
-	if (!Terminated(e))
+	if (!terminated(e))
 	{
 		int obj = nextElement(e);
 
@@ -195,7 +189,7 @@ int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 }
 
 
- 
+
 void init(bags* first, bags* next, bags* best, int capacite){
 	first->sacs = calloc(NBSAC, sizeof(int));
 	first->length = NBSAC;
@@ -249,7 +243,7 @@ int main(int argc, char **argv){
 	init(&first, &next, &best, capacite);
 
 	//Processing binPack
-	while(!Terminated(&enu)){
+	while(!terminated(&enu)){
 		nextPartialSolution(&enu, &first, &next, &best);
 	}
 

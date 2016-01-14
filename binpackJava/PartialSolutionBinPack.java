@@ -33,8 +33,8 @@ public class PartialSolutionBinPack implements PartialSolution {
 	public void Display() {
 		System.out.println("BinPack :");
 		System.out.println(" First  : " + first.size() + " sacs"
-				+ "\n Next : " + next.size() + " sacs"
-				+ "\n Best  : " + best.size() + " sacs");
+			+ "\n Next : " + next.size() + " sacs"
+			+ "\n Best  : " + best.size() + " sacs");
 	}
 
 	/* FONCTION POUR BINPACK */
@@ -109,35 +109,34 @@ public class PartialSolutionBinPack implements PartialSolution {
 			currents[2] = best.size() - 1;
 		}
 
-		if ((best.get(currents[2])) + obj > max) {
 
-			for (int i = 0; i < best.size(); i++) {
+		for (int i = 0; i < best.size(); i++) {
 
-				if ((best.get(i)) + obj <= max) {
-					if (gap == -1) {
-						done = true;
-						gap = max - ((best.get(i)) + obj);
-						bag = i;
-					}
+			if ((best.get(i)) + obj <= max) {
+				if (gap == -1) {
+					done = true;
+					gap = max - ((best.get(i)) + obj);
+					bag = i;
+				}
 
-					if (gap > max - ((best.get(i)) + obj)) {
+				if (gap > max - ((best.get(i)) + obj)) {
 
-						gap = max - ((best.get(i)) + obj);
-						bag = i;
-					}
-
+					gap = max - ((best.get(i)) + obj);
+					bag = i;
 				}
 
 			}
 
-			if (!done) {
-				best.add(0);
-				currents[2] = best.size() - 1;
-			} else {
-				currents[2] = bag;
-			}
-
 		}
+
+		if (!done) {
+			best.add(0);
+			currents[2] = best.size() - 1;
+		} else {
+			currents[2] = bag;
+		}
+
+		
 
 		int tmp = best.get(currents[2]) + obj;
 		best.remove(currents[2]);

@@ -20,7 +20,7 @@ do
 
 	for (( j=1; j<=$nbObj; j++ ))
 	do
-		poids=$[1 + $[$RANDOM % $MAXCAPACITE]]
+		poids=$[1 + $[$RANDOM % $capacite]]
 		echo $poids >> binpackJava/data/data_$i
 		echo $poids >> binpackC/data/data_$i
 		echo $poids >> binpackPython/data/data_$i
