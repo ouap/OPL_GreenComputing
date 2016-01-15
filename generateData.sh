@@ -1,18 +1,18 @@
 #!/bin/bash
 
-MAXOBJ=20000
-MAXCAPACITE=5000
-MAXPOIDSOBJ=600
+NBOBJ=50000
+MAXCAPACITE=20000
+MAXPOIDSOBJ=10000
 
 
-for i in {1..100}
+for i in {1..5}
 do
-	nbObj=$[1 + $[$RANDOM % $MAXOBJ]]
+	nbObj=$NBOBJ
 	capacite=$[1 + $[$RANDOM % $MAXCAPACITE]]
 	
 	echo "$nbObj" >> data/data_$i
 	echo "$capacite" >> data/data_$i
-		
+	
 
 	for (( j=1; j<=$nbObj; j++ ))
 	do

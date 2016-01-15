@@ -14,7 +14,7 @@ public class Sort {
 		List<Path> result = null;
 		System.out.println(args[0]);
 		try (Stream<Path> paths = Files.walk(Paths.get(args[0]))) {
-			result = paths.filter(s -> !s.toFile().isDirectory() && s.toFile().getName().startsWith("data_")).collect(Collectors.toList());
+			result = paths.filter(s -> !s.toFile().isDirectory() && s.toFile().getName().startsWith("data")).collect(Collectors.toList());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

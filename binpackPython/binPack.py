@@ -105,8 +105,8 @@ def addBestFit(best, obj, currbag, capacite):
 def nextPartialSolution(enum, capacite, current, first, next, best, iterator):
 		obj = nextElement(enum, iterator)
 		first, current[0] = addFirstFit(first, obj, current[0], capacite)
-		next, current[1] = addNextFit(next, obj, current[1], capacite)
-		best, current[2] = addBestFit(best, obj, current[2], capacite)
+		#next, current[1] = addNextFit(next, obj, current[1], capacite)
+		#best, current[2] = addBestFit(best, obj, current[2], capacite)
 
 		return next, current
 
