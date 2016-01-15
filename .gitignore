@@ -1,5 +1,4 @@
 powerapi-iagl-3.3
 powerapi-iagl-3.3-last.tgz
 binPackJava/*.class
-*/data*
 binPackC/*.o
