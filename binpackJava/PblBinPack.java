@@ -23,7 +23,7 @@ public PblBinPack(String fileName){
 
 	List<String> lignes = new ArrayList<String>();
 
-	fileName = "data/"+fileName;	
+	fileName = fileName;	
 
 	try{
 		Scanner scanner = new Scanner(new File(fileName));

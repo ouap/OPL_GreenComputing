@@ -9,5 +9,5 @@ else
     VAR=
 fi
 echo $VAR
-./powerapi-iagl-3.3/bin/powerapi 84 $VAR
+./powerapi-iagl-3.3/bin/powerapi 28 $VAR
 mv powerapi.out powerapi_c.out
