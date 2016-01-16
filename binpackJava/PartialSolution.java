@@ -1,7 +1,7 @@
 public interface PartialSolution {
 	public boolean complete(); // solution est complete!
 
-	public void Display(); // affichage}
+	public void Display(String method); // affichage}
 
 	/* classe des solutions partielles pour BinPacking */
 	public void addNextFit(int obj);

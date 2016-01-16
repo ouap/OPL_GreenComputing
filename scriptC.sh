@@ -1,21 +1,27 @@
 #!/bin/bash
 
-cd binpackC
+NBOBJ=(10000 25000 50000)
+methods=(fist next best)
+sleep=(3 3 3)
+i=0
 
-make
+make 
 
-for i in {1..5}
+for nb in ${$NBOBJ[@]}
 do
+	for method in ${$methods[@]}
+	do
+		./binPack ../data/data_$nb_1 $method &
 
-./binPack ../data/data_$i &
+		VAR=$!
+		../powerapi-iagl-3.3/bin/powerapi 84 100 $VAR &
+		powerapi=$!
+		sleep ${sleep[0]}
+		kill $powerapi
+		mv powerapi.out result/powerapi_c_data${nb}_${method}.out
+		rm powerapi.out
 
-VAR=$!
-../powerapi-iagl-3.3/bin/powerapi 84 100 $VAR &
-powerapi=$!
-sleep 10
-kill $powerapi
-mv powerapi.out powerapi_c_data$i.out
-
+	done
 done
 
 

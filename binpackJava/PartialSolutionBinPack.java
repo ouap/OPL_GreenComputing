@@ -25,16 +25,23 @@ public class PartialSolutionBinPack implements PartialSolution {
 
 	@Override
 	public boolean complete() {
-
 		return !e.hasMoreElements();
 	}// solution est complete!
 
 	@Override
-	public void Display() {
+	public void Display(String method) {
 		System.out.println("BinPack :");
-		System.out.println(" First  : " + first.size() + " sacs"
-			+ "\n Next : " + next.size() + " sacs"
-			+ "\n Best  : " + best.size() + " sacs");
+		switch(method){
+			case "first":
+				System.out.println(" First  : " + first.size() + " sacs");
+				break;
+			case "next":
+				System.out.println(" Next  : " + next.size() + " sacs");
+				break;
+			case "best":
+				System.out.println(" Best  : " + best.size() + " sacs");
+				break;
+		}
 	}
 
 	/* FONCTION POUR BINPACK */

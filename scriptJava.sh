@@ -1,21 +1,27 @@
 #!/bin/bash
 
-cd binpackJava/
+NBOBJ=(10000 25000 50000)
+methods=(fist next best)
+sleep=(3 3 3)
+i=0
 
 javac *.java
 
-for i in {1..5}
+for nb in ${$NBOBJ[@]}
 do
+	for method in ${$methods[@]}
+	do
+		java SolutionWalkerBinPackXX ../data/data_$nb_1 $method &
 
+		VAR=$!
+		../powerapi-iagl-3.3/bin/powerapi 84 100 $VAR &
+		powerapi=$!
+		sleep ${sleep[0]}
+		kill $powerapi
+		mv powerapi.out result/powerapi_java_data${nb}_${method}.out
+		rm powerapi.out
 
-java SolutionWalkerBinPackXX ../data/data_$i &
-
-VAR=$!
-../powerapi-iagl-3.3/bin/powerapi 84 100 $VAR &
-powerapi=$!
-sleep 10
-kill $powerapi
-mv powerapi.out powerapi_java_data$i.out
+	done
 
 done
 

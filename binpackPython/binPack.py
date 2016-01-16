@@ -1,10 +1,12 @@
 import sys
 
-def display(first, next, best):
-	print("BinPack Python : \n")
-	print("	First : " +str(len(first)))
-	print("	Next : " + str(len(next)))
-	print("	Best : " + str(len(best)))
+def display(bag, method):
+	if method == "first":
+		print("	First : " + str(len(bag)))
+	elif method == "next":
+		print("	Next : " + str(len(bag)))
+	elif method == "best":
+		print("	Best : " + str(len(bag)))
 
 
 def hasMoreElement(enum, iterator):
@@ -102,13 +104,17 @@ def addBestFit(best, obj, currbag, capacite):
 
 	return best, currbag
 
-def nextPartialSolution(enum, capacite, current, first, next, best, iterator):
-		obj = nextElement(enum, iterator)
-		first, current[0] = addFirstFit(first, obj, current[0], capacite)
-		#next, current[1] = addNextFit(next, obj, current[1], capacite)
-		#best, current[2] = addBestFit(best, obj, current[2], capacite)
+def nextPartialSolution(enum, capacite, current, bag, method, iterator):
+	obj = nextElement(enum, iterator)
 
-		return next, current
+	if method == "first":
+		bag, current = addFirstFit(bag, obj, current, capacite)
+	elif method == "next":
+		bag, current = addNextFit(bag, obj, current, capacite)
+	elif method == "best":
+		bag, current = addBestFit(bag, obj, current, capacite)
+
+	return bag, current
 
 
 def readFile(file):
@@ -128,25 +134,25 @@ def readFile(file):
 def main():
 	nbObj=0
 	capacite=0
-	current=[0,0,0]
+	current=0
 	iterator=0
 	enumeration = []
-	first = []
-	next = []
-	best = []
+	bag = []
 
-	if len(sys.argv) < 2:
-		sys.exit("No data file given.")
+	if len(sys.argv) < 3:
+		sys.exit("No data file given or/and binPackMethod.")
 	else:
 		nbObj, capacite, enumeration = readFile(sys.argv[1])
+		method=sys.argv[2]
 		print("NBOBJ  : " + str(nbObj) + "   ------   Capacite : " + str(capacite))
 		print("Taille enumeration : " + str(len(enumeration)))
 
+
 	while not(terminated(enumeration, iterator)):
-		next, current = nextPartialSolution(enumeration, capacite, current, first, next, best, iterator)
+		bag, current = nextPartialSolution(enumeration, capacite, current, bag, method, iterator)
 		iterator+=1
 
-	display(first, next, best)
+	display(bag, method)
 		
 
 if __name__ == "__main__":

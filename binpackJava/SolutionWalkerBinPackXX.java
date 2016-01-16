@@ -10,14 +10,21 @@ public class SolutionWalkerBinPackXX extends SolutionWalkerBinPack {
 	}
 
 	@Override
-	public void NextPartialSolution() {
+	public void NextPartialSolution(String method) {
 		if (!Terminated()) {
-
 			int i = e.NextElement();
-
-			ps.addNextFit(i);
-			ps.addFirstFit(i);
-			ps.addBestFit(i);
+			switch(method){
+				case "first":
+					ps.addFirstFit(i);
+					break;
+				case "next":
+					ps.addNextFit(i);
+					break;
+				case "best":
+					ps.addBestFit(i);
+					break;
+			}
+			
 		} else {
 			System.out.println("No more object.");
 		}
@@ -37,14 +44,14 @@ public class SolutionWalkerBinPackXX extends SolutionWalkerBinPack {
 
 	}
 
-	public void run() {
+	public void run(String method) {
 
 		while (!Terminated()) {
-			NextPartialSolution();
+			NextPartialSolution(method);
 
 		}
 
-		Current().Display();
+		Current().Display(method);
 
 	}
 
@@ -54,38 +61,21 @@ public class SolutionWalkerBinPackXX extends SolutionWalkerBinPack {
 		EnumerationObjets enuma;
 		SolutionWalkerBinPackXX sol;
 
-		if (args.length < 1) {
+		if (args.length < 2) {
 
-			System.out.print("Il manque le nom de fichier");
+			System.out.print("Il manque le nom de fichier et/ou la method de binPack \n");
 
 		} else {
 
 			pb = new PblBinPack(args[0]);
 
-			if (args.length < 2) {
-
 				enuma = new EnumerationOnline(pb.obj, pb.nbObj);
 				sol = new SolutionWalkerBinPackXX(pb, enuma);
-				sol.run();
-
-			} else {
-				if (args[1].equals("-on")) {
-					enuma = new EnumerationOnline(pb.obj, pb.nbObj);
-					sol = new SolutionWalkerBinPackXX(pb, enuma);
-					sol.run();
-				}
-				if (args[1].equals("-off")) {
-					enuma = new EnumerationTriee(pb.obj, pb.nbObj);
-					sol = new SolutionWalkerBinPackXX(pb, enuma);
-					sol.run();
-				} else {
-
-					System.out.print("Argument invalide");
-				}
-			}
+				sol.run(args[1]);
 
 		}
 
 	}
+
 
 }

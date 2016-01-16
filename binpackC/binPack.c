@@ -12,7 +12,8 @@ int nextElement(enumeration* e){
 
 int sum(enumeration* e){
 	int sum = 0;
-	for (int i = 0; i < e->length; i++)
+	int i;
+	for (i = 0; i < e->length; i++)
 	{
 		sum += e->obj[i];
 	}
@@ -64,7 +65,8 @@ void addFirstFit(int obj, bags *first){
 
 	if (first->sacs[first->currBag] + obj > first->capacite)
 	{
-		for (int i = 0; i < first->currBag; i++)
+		int i;
+		for (i = 0; i < first->currBag; i++)
 		{
 			if (first->sacs[i] + obj <= first->capacite && !done)
 			{
@@ -103,7 +105,8 @@ void addBestFit(int obj, bags *best){
 	}
 
 	
-	for (int i = 0; i < best->currBag + 1 ; i++)
+	int i;
+	for (i = 0; i < best->currBag + 1 ; i++)
 	{
 		if (best->sacs[i] + obj <= best->capacite)
 		{
@@ -140,14 +143,23 @@ bool terminated(enumeration *e){
 	return (!hasMoreElement(e)) ;
 }
 
-void nextPartialSolution(enumeration * e, bags *first, bags *next, bags *best){
+void nextPartialSolution(enumeration * e, bags *bag, int method){
 	if (!terminated(e))
 	{
 		int obj = nextElement(e);
 
-		addFirstFit(obj, first);
-		addNextFit(obj, next);
-		addBestFit(obj, best);
+		switch(method){
+			case 1:
+				addFirstFit(obj, bag);
+				break;
+			case 2:
+				addNextFit(obj, bag);
+				break;
+			case 3:
+				addBestFit(obj, bag);
+				break;
+		}
+		
 	}else{
 		printf("Plus d'objet. \n");
 	}
@@ -173,7 +185,8 @@ int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 	*nbObj =  atoi(fgets (buf, sizeof(buf), fp));
 	*capacite = atoi(fgets (buf, sizeof(buf), fp));
 
-	for (int i = 0; i < *nbObj; i++)
+	int i;
+	for (i = 0; i < *nbObj; i++)
 	{
 		fgets (buf, sizeof(buf), fp);
 		enu->obj[i] = atoi(buf);
@@ -190,66 +203,76 @@ int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 
 
 
-void init(bags* first, bags* next, bags* best, int capacite){
-	first->sacs = calloc(NBSAC, sizeof(int));
-	first->length = NBSAC;
-	first->currBag = -1;
-	first->capacite = capacite;
-	next->sacs = calloc(NBSAC, sizeof(int));
-	next->length = NBSAC;
-	next->currBag = -1;
-	next->capacite = capacite;
-	best->sacs = calloc(NBSAC, sizeof(int));
-	best->length = NBSAC;
-	best->currBag = -1;
-	best->capacite = capacite;
+void init(bags* bag, int capacite){
+	bag->sacs = calloc(NBSAC, sizeof(int));
+	bag->length = NBSAC;
+	bag->currBag = -1;
+	bag->capacite = capacite;
 }
 
-void free_bags(bags *first, bags *next, bags *best){
-	free(first->sacs);
-	free(next->sacs);
-	free(best->sacs);
-	first->sacs = NULL;
-	next->sacs = NULL;
-	best->sacs = NULL;
-
+void free_bags(bags *bag){
+	free(bag->sacs);
+	bag->sacs = NULL;
 }
 
-void display(bags first, bags next, bags best){
+void display(bags bag, int method){
 	printf("BinPack : \n");
-	printf("	First : %d\n", first.currBag +1);
-	printf("	Next : %d\n", next.currBag + 1);
-	printf("	Best : %d\n", best.currBag + 1);
+	switch(method){
+		case 1:
+		printf("	First : %d\n", bag.currBag +1);
+		break;
+		case 2:
+		printf("	Next : %d\n", bag.currBag +1);
+		break;
+		case 3:
+		printf("	Best : %d\n", bag.currBag +1);
+		break;
+	}
 }
 
 
 int main(int argc, char **argv){
 	enumeration enu;
 	int nbObj = 0, capacite = 0;
-	//int current[3] = {0,0,0}; 
-	bags first, next, best;
+	bags bag;
+	char* f = "first";
+	char* n = "next";
+	char* b = "best";
+	int method;
 
+	printf("%s\n",b );
 
-	if (argc < 2)
+	if (argc < 3)
 	{
-		perror("No data file given.\n");
+		perror("No data file given and/or binpack method.\n");
 		exit(EXIT_FAILURE);
 	}else{
 		readFile(argv[1], &nbObj, &capacite, &enu);
+
 		printf("NBObj : %d  --- Capacité : %d  \n", enu.length, capacite);
+		//Initializing bags
+		if(strcmp(argv[2], f)==0){
+			method =1;
+		}else if(strcmp(argv[2], n)==0){
+			method =2;
+		}else if(strcmp(argv[2], b) == 0){
+			method =3;
+		}else{
+			perror("Wrong binpack method.\n");
+			exit(EXIT_FAILURE);
+		}
+		init(&bag, capacite);
 	}	
 
-	//Initializing bags
-	init(&first, &next, &best, capacite);
-
+	
 	//Processing binPack
 	while(!terminated(&enu)){
-		nextPartialSolution(&enu, &first, &next, &best);
+		nextPartialSolution(&enu, &bag, method);
 	}
 
-	display(first, next, best);
+	display(bag, method);
 
-	free_bags(&first, &next, &best);
+	free_bags(&bag);
 
 	return 0;
 }
