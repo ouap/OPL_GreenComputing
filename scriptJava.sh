@@ -5,6 +5,8 @@ methods=(fist next best)
 sleep=(3 3 3)
 i=0
 
+cd binPackJava
+
 javac *.java
 
 for nb in ${$NBOBJ[@]}
@@ -25,6 +27,7 @@ do
 
 done
 
+cd ../
 #
 #jobs &>/dev/null
 #./GreenComputing_C/a.out &

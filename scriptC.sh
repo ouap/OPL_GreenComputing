@@ -5,6 +5,7 @@ methods=(fist next best)
 sleep=(3 3 3)
 i=0
 
+cd binPackC
 make 
 
 for nb in ${$NBOBJ[@]}
@@ -24,7 +25,7 @@ do
 	done
 done
 
-
+cd ..
 #
 #jobs &>/dev/null
 #./GreenComputing_C/a.out &
