@@ -2,4 +2,5 @@ powerapi-iagl-3.3
 powerapi-iagl-3.3-last.tgz
 binPackJava/*.class
 binPackC/*.o
-
+result.zip
+test.sh

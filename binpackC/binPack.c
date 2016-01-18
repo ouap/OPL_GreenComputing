@@ -1,7 +1,10 @@
 #include "binPack.h"
 
 bool hasMoreElement(enumeration* e){
-	return e->iterator < e->length;
+
+	if(e->iterator < e->length)
+		return 0;
+	return 1;
 }
 
 int nextElement(enumeration* e){
@@ -56,6 +59,8 @@ void addNextFit(int obj, bags *next){
 void addFirstFit(int obj, bags *first){
 	bool done = false;
 	int bag = 0;
+	int i;
+
 
 	if (first->currBag == -1)
 	{
@@ -63,9 +68,9 @@ void addFirstFit(int obj, bags *first){
 	}
 
 
+
 	if (first->sacs[first->currBag] + obj > first->capacite)
 	{
-		int i;
 		for (i = 0; i < first->currBag; i++)
 		{
 			if (first->sacs[i] + obj <= first->capacite && !done)
@@ -89,8 +94,7 @@ void addFirstFit(int obj, bags *first){
 	}else{
 		int tmp = first->sacs[first->currBag] + obj;
 		first->sacs[first->currBag] = tmp;
-	}
-
+    }
 
 }
 
@@ -98,6 +102,7 @@ void addBestFit(int obj, bags *best){
 	bool done = false;
 	int bag = 0;
 	int gap = -1;
+	int i;
 
 	if (best->currBag == -1)
 	{
@@ -105,8 +110,7 @@ void addBestFit(int obj, bags *best){
 	}
 
 	
-	int i;
-	for (i = 0; i < best->currBag + 1 ; i++)
+		for (i = 0; i < best->currBag + 1 ; i++)
 	{
 		if (best->sacs[i] + obj <= best->capacite)
 		{
@@ -140,11 +144,14 @@ void addBestFit(int obj, bags *best){
 }
 
 bool terminated(enumeration *e){
-	return (!hasMoreElement(e)) ;
+	if(hasMoreElement(e) == 1)
+		return 0;
+	return 1; 
 }
 
 void nextPartialSolution(enumeration * e, bags *bag, int method){
-	if (!terminated(e))
+
+	if ( terminated(e) != 0)
 	{
 		int obj = nextElement(e);
 
@@ -170,7 +177,7 @@ void nextPartialSolution(enumeration * e, bags *bag, int method){
 
 int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 	char buf[256];
-
+	int i;
 
 	FILE *fp;
 
@@ -184,8 +191,8 @@ int readFile(char *file_name, int *nbObj, int *capacite, enumeration *enu){
 
 	*nbObj =  atoi(fgets (buf, sizeof(buf), fp));
 	*capacite = atoi(fgets (buf, sizeof(buf), fp));
-
-	int i;
+	enu->iterator = 0;
+	
 	for (i = 0; i < *nbObj; i++)
 	{
 		fgets (buf, sizeof(buf), fp);
@@ -240,7 +247,7 @@ int main(int argc, char **argv){
 	char* b = "best";
 	int method;
 
-	printf("%s\n",b );
+	printf("dfreferferf");
 
 	if (argc < 3)
 	{
@@ -248,9 +255,8 @@ int main(int argc, char **argv){
 		exit(EXIT_FAILURE);
 	}else{
 		readFile(argv[1], &nbObj, &capacite, &enu);
-
 		printf("NBObj : %d  --- Capacité : %d  \n", enu.length, capacite);
-		//Initializing bags
+		/*Initializing bags*/
 		if(strcmp(argv[2], f)==0){
 			method =1;
 		}else if(strcmp(argv[2], n)==0){
@@ -261,12 +267,15 @@ int main(int argc, char **argv){
 			perror("Wrong binpack method.\n");
 			exit(EXIT_FAILURE);
 		}
+
 		init(&bag, capacite);
+
 	}	
 
 	
-	//Processing binPack
-	while(!terminated(&enu)){
+	/* Processing binPack */
+
+	while(terminated(&enu) != 0){
 		nextPartialSolution(&enu, &bag, method);
 	}
 

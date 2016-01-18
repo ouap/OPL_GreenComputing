@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#define TAILLE 50000
+#define TAILLE 100000
 #define NBSAC 500
 
 
